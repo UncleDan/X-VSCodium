@@ -143,7 +143,7 @@ Modifica il file di configurazione del menu winPenPack aggiungendo:
 [X-VSCodium]
 Name=VSCodium
 Exec=Bin\X-VSCodium\X-VSCodium.exe
-Icon=Bin\X-VSCodium\VSCodium-win32-x64\codium.exe,0
+Icon=Bin\X-VSCodium\codium.exe,0
 Category=Development
 ```
 
@@ -174,7 +174,7 @@ cartella `winPenPack\Temp\X-VSCodium\`, mostrando percentuale e dimensioni.
 
 **D) Estrazione**
 
-Estrae il ZIP in `Bin\X-VSCodium\VSCodium-win32-x64\`.
+Estrae il ZIP in `Bin\X-VSCodium\`.
 Usa 7-Zip se disponibile in `App\7-Zip\7z.exe`, altrimenti usa Shell.Application
 (nativo Windows, nessuna dipendenza aggiuntiva).
 
@@ -226,7 +226,7 @@ prima e dopo ogni avvio.
    Scegli il file `VSCodium-win32-x64-{versione}.zip`
 2. Estrai il contenuto **sopra** la cartella esistente:
    ```
-   winPenPack\Bin\X-VSCodium\VSCodium-win32-x64\
+   winPenPack\Bin\X-VSCodium\
    ```
    Conferma la sovrascrittura dei file quando richiesto.
    La cartella `data\` non è presente nello ZIP e non verrà toccata.
@@ -251,7 +251,7 @@ dalla pagina GitHub dell'estensione e installala manualmente:
 
 ### Abilitare il Microsoft Marketplace (opzionale)
 
-Modifica `winPenPack\Bin\X-VSCodium\VSCodium-win32-x64\resources\app\product.json`:
+Modifica `winPenPack\Bin\X-VSCodium\resources\app\product.json`:
 
 ```json
 "extensionsGallery": {
