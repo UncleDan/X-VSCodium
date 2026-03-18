@@ -54,3 +54,6 @@ Thumbs.db
 *.xls
 *.xlsx
 *.gis
+
+# Project specific files
+X-VSCodium.exe
