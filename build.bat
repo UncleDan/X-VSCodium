@@ -28,11 +28,9 @@ if not exist "%ICON%" (
 if errorlevel 1 (
     echo.
     echo ERRORE: compilazione fallita.
-    pause
     exit /b 1
 )
 
 echo.
 echo OK: %OUT% creato con successo.
-pause
 endlocal
