@@ -28,7 +28,7 @@
 ;
 ; #AutoIt3Wrapper_Compression=4
 ; #AutoIt3Wrapper_UseX64=Y
-; #AutoIt3Wrapper_Icon=icons\vscodium.ico
+; #AutoIt3Wrapper_Icon=icons\code.ico
 ; #AutoIt3Wrapper_Res_Description=X-VSCodium - Portable VSCodium
 ; #AutoIt3Wrapper_Res_Fileversion=1.5.4.0
 ; #AutoIt3Wrapper_Res_ProductVersion=1.5.4 rev1beta
@@ -63,9 +63,9 @@ Global $sTempDir      = @TempDir
 ; -------------------------------------------------------
 ; Lettura INI
 ; -------------------------------------------------------
-Global $sProgramExe    = IniRead($sIniFile, "Launch", "ProgramExecutable", "Bin\VSCodium.exe")
+Global $sProgramExe    = IniRead($sIniFile, "Launch", "ProgramExecutable", "Bin\VSCodium\VSCodium.exe")
 Global $sProgramParams = IniRead($sIniFile, "Launch", "ProgramParameters", "")
-Global $sWorkingDir    = IniRead($sIniFile, "Launch", "WorkingDirectory",  $sProgramDir & "\Bin")
+Global $sWorkingDir    = IniRead($sIniFile, "Launch", "WorkingDirectory",  $sProgramDir & "\Bin\VSCodium")
 
 ; -------------------------------------------------------
 ; Espansione placeholder
@@ -78,8 +78,9 @@ $sProgramParams = StringReplace($sProgramParams, "%Temp%",       $sTempDir)
 
 ; -------------------------------------------------------
 ; Percorsi cartelle data\ portabili
+; data\ si trova nella stessa cartella di VSCodium.exe
 ; -------------------------------------------------------
-Global $sDataDir       = $sProgramDir & "\Bin\data"
+Global $sDataDir       = $sProgramDir & "\Bin\VSCodium\data"
 Global $sUserDataDir   = $sDataDir & "\user-data"
 Global $sExtensionsDir = $sDataDir & "\extensions"
 Global $sTmpDir        = $sDataDir & "\tmp"
@@ -94,7 +95,7 @@ If Not FileExists($sExeFullPath) Then
         "VSCodium.exe non trovato." & @CRLF & @CRLF & _
         "Percorso atteso:" & @CRLF & $sExeFullPath & @CRLF & @CRLF & _
         "Copiare i binari di VSCodium in:" & @CRLF & _
-        $sProgramDir & "\Bin\")
+        $sProgramDir & "\Bin\VSCodium\")
     Exit 1
 EndIf
 
@@ -117,7 +118,7 @@ If Not FileExists($sTmpDir)        Then DirCreate($sTmpDir)
 ; Il PID-file è mantenuto per coerenza architetturale con gli
 ; altri launcher della serie e per eventuali estensioni future.
 ; -------------------------------------------------------
-Global $sPidDir  = $sProgramDir & "\Bin\data"
+Global $sPidDir  = $sProgramDir & "\Bin\VSCodium\data"
 Global $sPidFile = $sPidDir & "\.launcher." & @ProcessID & ".pid"
 
 Local $hPid = FileOpen($sPidFile, 2)

@@ -4,7 +4,7 @@ setlocal
 set AUT2EXE="C:\Program Files (x86)\AutoIt3\Aut2Exe\Aut2exe_x64.exe"
 set SRC=X-VSCodium.au3
 set OUT=X-VSCodium.exe
-set ICON=icons\vscodium.ico
+set ICON=icons\code.ico
 
 echo Compilazione %SRC% ...
 

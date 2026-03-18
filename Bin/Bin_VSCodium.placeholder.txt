@@ -1,36 +1,36 @@
 Inserire qui il contenuto dello zip portabile di VSCodium 1.110.11631.
 
-Struttura attesa dopo l'estrazione:
-  Bin\
-  ├── VSCodium.exe          ← eseguibile principale
-  ├── VSCodium              ← helper (senza estensione)
+Struttura attesa dopo l'estrazione in Bin\VSCodium\:
+  Bin\VSCodium\
+  ├── VSCodium.exe
+  ├── VSCodium                (helper senza estensione)
   ├── resources\
   │   └── app\
+  │       └── resources\
+  │           └── win32\
+  │               └── code.ico   ← COPIARE in icons\ del pacchetto
   ├── locales\
   ├── *.dll
   └── (altri file Electron)
 
-NOTA: NON estrarre la cartella data\ dallo zip — viene creata
-automaticamente dal launcher al primo avvio.
+PASSO 1 — Download zip portabile win64:
+  https://github.com/VSCodium/vscodium/releases/download/1.110.11631/VSCodium-win32-x64-1.110.11631.zip
+  → Estrarre il contenuto in Bin\VSCodium\
 
-Come ottenere i binari di VSCodium 1.110.11631:
+PASSO 2 — Copia icona:
+  Copiare Bin\VSCodium\resources\app\resources\win32\code.ico
+  nella cartella icons\ del pacchetto (rinominare se si vuole, ma
+  aggiornare di conseguenza build.bat e X-VSCodium.ini).
 
-  A) Zip portabile win64 (UNICO METODO SUPPORTATO):
-     https://github.com/VSCodium/vscodium/releases/download/1.110.11631/VSCodium-win32-x64-1.110.11631.zip
-     → Estrarre il contenuto dello zip QUI (in Bin\)
-     → NON usare i file installer .exe o .msi
-
-  ATTENZIONE:
-  La portable mode funziona SOLO con lo zip portabile.
-  Gli installer (.exe e .msi) non supportano la portable mode.
-  Il launcher crea Bin\data\ alla prima esecuzione per attivare
-  automaticamente la portable mode di VSCodium.
+NOTA:
+  - Usare SOLO lo zip portabile — gli installer .exe/.msi non supportano la portable mode.
+  - NON creare manualmente data\ — viene creata automaticamente dal launcher.
+  - La cartella data\ già presente in Bin\VSCodium\ viene preservata agli aggiornamenti.
 
 AGGIORNAMENTO FUTURO:
-  Per aggiornare a una versione più recente:
   1. Scaricare il nuovo zip portabile
-  2. Eliminare il contenuto di Bin\ TRANNE la cartella data\
-  3. Estrarre il nuovo zip in Bin\
+  2. Eliminare il contenuto di Bin\VSCodium\ TRANNE la cartella data\
+  3. Estrarre il nuovo zip in Bin\VSCodium\
   4. Avviare X-VSCodium.exe — settings e estensioni sono preservati
 
-Dopo aver copiato i binari eliminare questo file .txt.
+Dopo aver copiato i binari e l'icona eliminare questo file .txt.

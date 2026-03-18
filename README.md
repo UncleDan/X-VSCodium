@@ -19,22 +19,20 @@ Microsoft, branding e licenza proprietaria. Usa open-vsx.org come
 marketplace di estensioni al posto del Visual Studio Marketplace.
 
 Come Notepad++, VSCodium supporta la **portable mode nativa**: la
-semplice presenza della cartella `Bin\data\` accanto all'eseguibile
-attiva automaticamente la modalità portabile. Il launcher non deve
-passare parametri speciali — si occupa di creare la struttura `data\`
-al primo avvio e di gestire le operazioni post-run.
+presenza della cartella `data\` accanto all'eseguibile attiva
+automaticamente la modalità portabile. Il launcher crea la struttura
+`data\` al primo avvio e gestisce le operazioni post-run.
 
 ---
 
 ## Meccanismo di portabilità
 
-VSCodium supporta la portable mode nativa: creando una cartella `data`
-nella stessa directory dell'eseguibile, questa viene usata per contenere
-tutta la configurazione di VSCodium, inclusi session state, preferenze
-ed estensioni.
+VSCodium rileva la portable mode dalla presenza di `data\` nella stessa
+cartella di `VSCodium.exe`. Il launcher posiziona i binari in
+`Bin\VSCodium\` e crea `Bin\VSCodium\data\` al primo avvio:
 
 ```
-Bin\
+Bin\VSCodium\
 ├── VSCodium.exe
 └── data\              ← presenza = portable mode attiva
     ├── user-data\     ← settings, keybindings, temi, workspace
@@ -42,8 +40,7 @@ Bin\
     └── tmp\           ← file temporanei
 ```
 
-La cartella `data\` viene creata dal launcher al primo avvio se non
-esiste. Da quel momento VSCodium non scrive nulla in `%APPDATA%\VSCodium`.
+Da quel momento VSCodium non scrive nulla in `%APPDATA%\VSCodium`.
 
 ---
 
@@ -54,20 +51,22 @@ X-VSCodium\
 ├── X-VSCodium.au3              ← sorgente AutoIt
 ├── X-VSCodium.exe              ← launcher compilato
 ├── X-VSCodium.ini              ← configurazione
+├── build.bat                   ← script di compilazione
 ├── Bin\
-│   ├── VSCodium.exe            ← [DA AGGIUNGERE] binari VSCodium 1.110.11631
-│   ├── resources\
-│   ├── locales\
-│   └── data\                   ← creata dal launcher al primo avvio
-│       ├── user-data\
-│       │   └── User\
-│       │       ├── settings.json
-│       │       └── keybindings.json
-│       ├── extensions\
-│       └── tmp\
-├── icons\
-│   └── vscodium.ico
-└── README.md
+│   └── VSCodium\               ← [DA AGGIUNGERE] contenuto zip portabile
+│       ├── VSCodium.exe
+│       ├── resources\
+│       │   └── app\
+│       │       └── resources\
+│       │           └── win32\
+│       │               └── code.ico   ← icona (copiare in icons\)
+│       ├── locales\
+│       └── data\               ← creata dal launcher al primo avvio
+│           ├── user-data\
+│           ├── extensions\
+│           └── tmp\
+└── icons\
+    └── code.ico                ← copiare da Bin\VSCodium\resources\app\resources\win32\
 ```
 
 ---
@@ -86,21 +85,22 @@ https://github.com/VSCodium/vscodium/releases/download/1.110.11631/VSCodium-win3
 ### Installazione
 
 1. Scaricare `VSCodium-win32-x64-1.110.11631.zip`
-2. Estrarre tutto il contenuto dello zip in `Bin\`
-3. Verificare che `Bin\VSCodium.exe` esista
-4. **Non** creare manualmente la cartella `data\` — viene creata
-   automaticamente dal launcher al primo avvio
-5. Avviare `X-VSCodium.exe`
+2. Creare la cartella `Bin\VSCodium\` se non esiste
+3. Estrarre tutto il contenuto dello zip in `Bin\VSCodium\`
+4. Verificare che `Bin\VSCodium\VSCodium.exe` esista
+5. Copiare l'icona in `icons\`:
+   ```
+   Bin\VSCodium\resources\app\resources\win32\code.ico  →  icons\code.ico
+   ```
+6. **Non** creare manualmente la cartella `data\` — il launcher
+   la crea automaticamente al primo avvio
+7. Avviare `X-VSCodium.exe`
 
 ### Aggiornamento a versione futura
 
-La cartella `data` può essere spostata su altre installazioni di
-VS Code, utile per aggiornare la versione portabile.
-
-Procedura:
 1. Scaricare il nuovo zip portabile
-2. Eliminare il contenuto di `Bin\` **tranne** la cartella `data\`
-3. Estrarre il nuovo zip in `Bin\`
+2. Eliminare il contenuto di `Bin\VSCodium\` **tranne** la cartella `data\`
+3. Estrarre il nuovo zip in `Bin\VSCodium\`
 4. Avviare `X-VSCodium.exe` — settings e estensioni sono preservati
 
 ---
@@ -108,14 +108,8 @@ Procedura:
 ## Estensioni
 
 VSCodium usa **open-vsx.org** come marketplace predefinito.
-Le estensioni si installano normalmente da dentro VSCodium
-(**Ctrl+Shift+X**) e vengono salvate in `Bin\data\extensions\`.
-
-> **Nota:** alcune estensioni del Visual Studio Marketplace hanno
-> licenze che ne vietano l'uso fuori da VS Code ufficiale e non
-> sono disponibili su open-vsx.org. Per usare il Marketplace MS
-> è possibile configurare `product.json` — vedere la documentazione
-> ufficiale di VSCodium.
+Le estensioni si installano normalmente dall'interno di VSCodium
+(**Ctrl+Shift+X**) e vengono salvate in `Bin\VSCodium\data\extensions\`.
 
 ---
 
@@ -134,20 +128,24 @@ Le estensioni si installano normalmente da dentro VSCodium
 
 ```bat
 set AUT2EXE="C:\Program Files (x86)\AutoIt3\Aut2Exe\Aut2exe_x64.exe"
-set ICON=icons\vscodium.ico
+set ICON=icons\code.ico
 
 %AUT2EXE% /in "X-VSCodium.au3" /out "X-VSCodium.exe" /icon %ICON% /x64
 ```
 
 Il file `X-VSCodium.exe` viene creato nella stessa cartella del sorgente.
-L'icona viene letta da `icons\\vscodium.ico` — il file deve esistere prima della compilazione.
+L'icona viene letta da `icons\code.ico` — il file deve esistere prima della compilazione.
+
+In alternativa usare `build.bat` incluso nel pacchetto (doppio clic).
+
+---
 
 ## Verifica portabilità
 
 1. Avviare `X-VSCodium.exe`
-2. Verificare che `Bin\data\user-data\` venga creata
+2. Verificare che `Bin\VSCodium\data\user-data\` venga creata
 3. Installare un'estensione e verificare che appaia in
-   `Bin\data\extensions\`
+   `Bin\VSCodium\data\extensions\`
 4. Aprire `%APPDATA%\VSCodium` — deve essere vuoto o inesistente
 5. Spostare il pacchetto su un'altra unità e riavviare —
    settings ed estensioni devono essere preservati
@@ -160,32 +158,25 @@ L'icona viene letta da `icons\\vscodium.ico` — il file deve esistere prima del
 
 | Aspetto | X-Notepad++ | X-VSCodium |
 |---|---|---|
-| Portabilità | `config.xml` nella root | `data\` nella root di Bin\ |
+| Binari in | `Bin\` | `Bin\VSCodium\` |
+| Portabilità | `config.xml` nella root di Bin\ | `data\` nella root di Bin\VSCodium\ |
 | Auto-updater | WinGUp (da disabilitare) | nessuno nel zip portabile |
-| Istanze multiple | native, condividono config | native, condividono `data\` |
+| Icona | `icons\notepad++.ico` | `icons\code.ico` (da `resources\app\resources\win32\`) |
 | PathNormalize | `config.xml`, `session.xml` | `settings.json` |
-| PID-file | per WinGUp condizionale | per lock cleanup condizionale |
 
 ### Electron e processi figli
 
 VSCodium è basato su Electron e avvia numerosi processi figli
 (renderer, extension host, language server, ecc.). Il launcher
 usa `ProcessWaitClose($iPID)` sul processo padre, seguito da
-un'attesa di 2 secondi per il flush dei file di configurazione
-prima di eseguire le operazioni post-run.
+un'attesa di 2 secondi per il flush dei file di configurazione.
 
 ### PathNormalize e settings.json
 
 `settings.json` può contenere percorsi assoluti (interpreter Python,
-cartelle di lavoro, ecc.). La sezione `[PathNormalize]` normalizza
-questi percorsi alla chiusura per garantire portabilità dopo lo
-spostamento del pacchetto.
-
-`workspaceStorage` contiene lo stato degli workspace aperti con
-percorsi assoluti alle cartelle di progetto. Questi non vengono
-normalizzati (sono percorsi al codice sorgente dell'utente, non
-al pacchetto VSCodium) — semplicemente diventeranno workspace
-"non trovati" se il codice sorgente non è accessibile.
+cartelle di lavoro, ecc.). La sezione `[PathNormalize]` del `.ini`
+normalizza questi percorsi alla chiusura per garantire portabilità
+dopo lo spostamento del pacchetto.
 
 ---
 
@@ -193,4 +184,4 @@ al pacchetto VSCodium) — semplicemente diventeranno workspace
 
 | Versione | Data | Note |
 |---|---|---|
-| 1.5.4 rev1beta | 2026-03-18 | Prima versione X-VSCodium. Basato su X-Notepad++ rev18beta. Supporto VSCodium 1.110.11631. Portable mode via data\. PID-file multi-istanza. PathNormalize settings.json. |
+| 1.5.4 rev1beta | 2026-03-18 | Prima versione X-VSCodium. Basato su X-Notepad++ rev18beta. Supporto VSCodium 1.110.11631. Binari in Bin\VSCodium\. Portable mode via data\. Icona code.ico da resources\app\resources\win32\. PID-file multi-istanza. PathNormalize settings.json. |
