@@ -1,0 +1,36 @@
+Inserire qui il contenuto dello zip portabile di VSCodium 1.110.11631.
+
+Struttura attesa dopo l'estrazione:
+  Bin\
+  ├── VSCodium.exe          ← eseguibile principale
+  ├── VSCodium              ← helper (senza estensione)
+  ├── resources\
+  │   └── app\
+  ├── locales\
+  ├── *.dll
+  └── (altri file Electron)
+
+NOTA: NON estrarre la cartella data\ dallo zip — viene creata
+automaticamente dal launcher al primo avvio.
+
+Come ottenere i binari di VSCodium 1.110.11631:
+
+  A) Zip portabile win64 (UNICO METODO SUPPORTATO):
+     https://github.com/VSCodium/vscodium/releases/download/1.110.11631/VSCodium-win32-x64-1.110.11631.zip
+     → Estrarre il contenuto dello zip QUI (in Bin\)
+     → NON usare i file installer .exe o .msi
+
+  ATTENZIONE:
+  La portable mode funziona SOLO con lo zip portabile.
+  Gli installer (.exe e .msi) non supportano la portable mode.
+  Il launcher crea Bin\data\ alla prima esecuzione per attivare
+  automaticamente la portable mode di VSCodium.
+
+AGGIORNAMENTO FUTURO:
+  Per aggiornare a una versione più recente:
+  1. Scaricare il nuovo zip portabile
+  2. Eliminare il contenuto di Bin\ TRANNE la cartella data\
+  3. Estrarre il nuovo zip in Bin\
+  4. Avviare X-VSCodium.exe — settings e estensioni sono preservati
+
+Dopo aver copiato i binari eliminare questo file .txt.
